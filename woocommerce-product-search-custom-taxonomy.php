@@ -1,7 +1,7 @@
 
 <?php
 /**
- * woocommerce-product-search-custom-taxonomy.php
+ * woocommerce-product-search-manufacturer.php
  *
  * Copyright (c) 2023 www.itthinx.com
  *
@@ -19,9 +19,9 @@
  * @package woocommerce-product-search-custom-taxonomy
  * @since 1.0.0
  *
- * Plugin Name: WooCommerce Product Search Custom Taxonomy
- * Plugin URI: https://github.com/itthinx/affiliates-auto-login
- * Description: Extends <a href="https://woocommerce.com/products/woocommerce-product-search/">WooCommerce Product Search</a> - Keyword searches for terms in a custom taxonomy will result in matching products. 
+ * Plugin Name: WooCommerce Product Search Manufacturer
+ * Plugin URI: https://github.com/itthinx/woocommerce-product-search-manufacturer
+ * Description: Extends <a href="https://woocommerce.com/products/woocommerce-product-search/">WooCommerce Product Search</a> - Keyword searches for terms in a Manufacturer custom taxonomy will result in matching products. 
  * Version: 1.0.0
  * Author: itthinx
  * Author URI: https://www.itthinx.com
@@ -32,11 +32,11 @@ if ( !defined( 'ABSPATH' ) ) {
 }
 
 /**
- * Uses the WooCommerce Product Search API to implement keyword searches for terms in a custom taxonomy that will result in matching products.
+ * Uses the WooCommerce Product Search API to implement keyword searches for terms in a Manufacturer custom taxonomy that will result in matching products.
  *
- * The custom taxonomy assumed in this example is 'Manufacturer'.
+ * The custom taxonomy assumed is registered in the 'WooCommerce Manufacturer' plugin: https://github.com/itthinx/woocommerce-manufacturer
  */
-class WooCommerce_Product_Search_Custom_Taxonomy {
+class WooCommerce_Product_Search_Manufacturer {
 
 	/**
 	 * Boot this ...
@@ -66,4 +66,4 @@ class WooCommerce_Product_Search_Custom_Taxonomy {
 	}
 }
 
-WooCommerce_Product_Search_Custom_Taxonomy::init();
+WooCommerce_Product_Search_Manufacturer::init();
