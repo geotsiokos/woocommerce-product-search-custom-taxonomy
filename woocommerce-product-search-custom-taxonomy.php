@@ -37,12 +37,32 @@ if ( !defined( 'ABSPATH' ) ) {
  * The custom taxonomy assumed in this example is 'Manufacturer'.
  */
 class WooCommerce_Product_Search_Custom_Taxonomy {
-	
+
 	/**
 	 * Boot this ...
 	 */
 	public static function init() {
-		// @todo do something
+		add_filter( 'woocommerce_product_search_indexer_filter_content', array( __CLASS__, 'woocommerce_product_search_indexer_filter_content' ), 10, 3 );
+	}
+
+	public static function woocommerce_product_search_indexer_filter_content( $content, $context, $post_id ) {
+		if ( $context === 'post_content' ) {
+
+			$manufacturers = null;
+
+			$terms = get_the_terms( $post_id, 'manufacturer' );
+			if ( !is_wp_error( $terms ) && !empty( $terms ) && is_array( $terms ) ) {
+				$manufacturers = array();
+				foreach ( $terms as $term ) {
+					$manufacturers[] = $term->name;
+				}
+				$manufacturers = implode( ' ', $manufacturers );
+			}
+			if ( $manufacturers !== null && is_string( $manufacturers ) ) {
+				$content .= ' ' . $manufacturers;
+			}
+		}
+		return $content;
 	}
 }
 
