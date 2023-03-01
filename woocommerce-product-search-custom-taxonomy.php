@@ -37,7 +37,7 @@ if ( !defined( 'ABSPATH' ) ) {
  * The custom taxonomy assumed in this example is 'Manufacturer'.
  */
 class WooCommerce_Product_Search_Custom_Taxonomy {
-	
+
 	/**
 	 * Boot this ...
 	 */
