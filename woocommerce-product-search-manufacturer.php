@@ -16,7 +16,7 @@
  * This header and all notices must be kept intact.
  *
  * @author itthinx
- * @package woocommerce-product-search-custom-taxonomy
+ * @package woocommerce-product-search-manufacturer
  * @since 1.0.0
  *
  * Plugin Name: WooCommerce Product Search Manufacturer
