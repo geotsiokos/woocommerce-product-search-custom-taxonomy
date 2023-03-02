@@ -64,8 +64,8 @@ class WooCommerce_Product_Search_Manufacturer {
 	 */
 	public static function woocommerce_product_search_process_query_product_taxonomies( $product_taxonomies, $wp_query ) {
 
-		if ( is_array( $product_taxonomies ) && !in_array( self::$taxonomy, $product_taxonomies ) ) {
-			$product_taxonomies[] = self::$taxonomy;
+		if ( is_array( $product_taxonomies ) && !in_array( self::$manufacturer_taxonomy, $product_taxonomies ) ) {
+			$product_taxonomies[] = self::$manufacturer_taxonomy;
 		}
 		return $product_taxonomies;
 	}
