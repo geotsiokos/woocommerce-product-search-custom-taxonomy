@@ -1,4 +1,3 @@
-
 <?php
 /**
  * woocommerce-product-search-manufacturer.php
@@ -67,3 +66,4 @@ class WooCommerce_Product_Search_Manufacturer {
 }
 
 WooCommerce_Product_Search_Manufacturer::init();
+
