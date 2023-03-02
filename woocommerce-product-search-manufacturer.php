@@ -93,7 +93,7 @@ class WooCommerce_Product_Search_Manufacturer {
 				$manufacturers = implode( ' ', $manufacturers );
 			}
 			if ( $manufacturers !== null && is_string( $manufacturers ) ) {
-				$content .= ' ' . $manufacturers;error_log($content);
+				$content .= ' ' . $manufacturers;
 			}
 		}
 		return $content;
