@@ -81,12 +81,11 @@ class WooCommerce_Product_Search_Manufacturer {
 			if ( $context === 'post_content' ) {
 
 				$manufacturers = null;
-				$product_id = $post_id;
 				$product = wc_get_product( $post_id );
 				if ( $product->is_type( 'variation' ) ) {
-					$product_id = $product->get_parent_id();
+					$post_id = $product->get_parent_id();
 				}
-				$terms = get_the_terms( $product_id, self::$manufacturer_taxonomy );
+				$terms = get_the_terms( $post_id, self::$manufacturer_taxonomy );
 				if ( !is_wp_error( $terms ) && !empty( $terms ) && is_array( $terms ) ) {
 					$manufacturers = array();
 					foreach ( $terms as $term ) {
