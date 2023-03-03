@@ -48,10 +48,8 @@ class WooCommerce_Product_Search_Manufacturer {
 	 * Boot this ...
 	 */
 	public static function init() {
-		if ( taxonomy_exists( self::$manufacturer_taxonomy ) ) {
-			add_filter( 'woocommerce_product_search_process_query_product_taxonomies', array( __CLASS__, 'woocommerce_product_search_process_query_product_taxonomies' ), 10, 2 );
-			add_filter( 'woocommerce_product_search_indexer_filter_content', array( __CLASS__, 'woocommerce_product_search_indexer_filter_content' ), 10, 3 );
-		}
+		add_filter( 'woocommerce_product_search_process_query_product_taxonomies', array( __CLASS__, 'woocommerce_product_search_process_query_product_taxonomies' ), 10, 2 );
+		add_filter( 'woocommerce_product_search_indexer_filter_content', array( __CLASS__, 'woocommerce_product_search_indexer_filter_content' ), 10, 3 );
 	}
 
 	/**
@@ -63,7 +61,6 @@ class WooCommerce_Product_Search_Manufacturer {
 	 * return string[]
 	 */
 	public static function woocommerce_product_search_process_query_product_taxonomies( $product_taxonomies, $wp_query ) {
-
 		if ( is_array( $product_taxonomies ) && !in_array( self::$manufacturer_taxonomy, $product_taxonomies ) ) {
 			$product_taxonomies[] = self::$manufacturer_taxonomy;
 		}
@@ -80,20 +77,26 @@ class WooCommerce_Product_Search_Manufacturer {
 	 * @return string
 	 */
 	public static function woocommerce_product_search_indexer_filter_content( $content, $context, $post_id ) {
-		if ( $context === 'post_content' ) {
+		if ( taxonomy_exists( self::$manufacturer_taxonomy ) ) {
+			if ( $context === 'post_content' ) {
 
-			$manufacturers = null;
-
-			$terms = get_the_terms( $post_id, self::$manufacturer_taxonomy );
-			if ( !is_wp_error( $terms ) && !empty( $terms ) && is_array( $terms ) ) {
-				$manufacturers = array();
-				foreach ( $terms as $term ) {
-					$manufacturers[] = $term->name;
+				$manufacturers = null;
+				$product_id = $post_id;
+				$product = wc_get_product( $post_id );
+				if ( $product->is_type( 'variation' ) ) {
+					$product_id = $product->get_parent_id();
 				}
-				$manufacturers = implode( ' ', $manufacturers );
-			}
-			if ( $manufacturers !== null && is_string( $manufacturers ) ) {
-				$content .= ' ' . $manufacturers;
+				$terms = get_the_terms( $product_id, self::$manufacturer_taxonomy );
+				if ( !is_wp_error( $terms ) && !empty( $terms ) && is_array( $terms ) ) {
+					$manufacturers = array();
+					foreach ( $terms as $term ) {
+						$manufacturers[] = $term->name;
+					}
+					$manufacturers = implode( ' ', $manufacturers );
+				}
+				if ( $manufacturers !== null && is_string( $manufacturers ) ) {
+					$content .= ' ' . $manufacturers;
+				}
 			}
 		}
 		return $content;
