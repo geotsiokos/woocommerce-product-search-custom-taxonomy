@@ -38,27 +38,64 @@ if ( !defined( 'ABSPATH' ) ) {
 class WooCommerce_Product_Search_Manufacturer {
 
 	/**
+	 * Manufacturer taxonomy
+	 *
+	 * @var string
+	 */
+	private static $manufacturer_taxonomy = 'manufacturer';
+
+	/**
 	 * Boot this ...
 	 */
 	public static function init() {
+		add_filter( 'woocommerce_product_search_process_query_product_taxonomies', array( __CLASS__, 'woocommerce_product_search_process_query_product_taxonomies' ), 10, 2 );
 		add_filter( 'woocommerce_product_search_indexer_filter_content', array( __CLASS__, 'woocommerce_product_search_indexer_filter_content' ), 10, 3 );
 	}
 
+	/**
+	 * Add the manufacturer taxonomy to handled taxonomies.
+	 *
+	 * @param string[] $product_taxonomies
+	 * @param WP_Query $wp_query
+	 *
+	 * return string[]
+	 */
+	public static function woocommerce_product_search_process_query_product_taxonomies( $product_taxonomies, $wp_query ) {
+		if ( is_array( $product_taxonomies ) && !in_array( self::$manufacturer_taxonomy, $product_taxonomies ) ) {
+			$product_taxonomies[] = self::$manufacturer_taxonomy;
+		}
+		return $product_taxonomies;
+	}
+
+	/**
+	 * Add the manufacturer to content indexing so product searches for the manufacturer include related products.
+	 *
+	 * @param string $content
+	 * @param string $context
+	 * @param int $post_id
+	 *
+	 * @return string
+	 */
 	public static function woocommerce_product_search_indexer_filter_content( $content, $context, $post_id ) {
-		if ( $context === 'post_content' ) {
+		if ( taxonomy_exists( self::$manufacturer_taxonomy ) ) {
+			if ( $context === 'post_content' ) {
 
-			$manufacturers = null;
-
-			$terms = get_the_terms( $post_id, 'manufacturer' );
-			if ( !is_wp_error( $terms ) && !empty( $terms ) && is_array( $terms ) ) {
-				$manufacturers = array();
-				foreach ( $terms as $term ) {
-					$manufacturers[] = $term->name;
+				$manufacturers = null;
+				$product = wc_get_product( $post_id );
+				if ( $product->is_type( 'variation' ) ) {
+					$post_id = $product->get_parent_id();
 				}
-				$manufacturers = implode( ' ', $manufacturers );
-			}
-			if ( $manufacturers !== null && is_string( $manufacturers ) ) {
-				$content .= ' ' . $manufacturers;
+				$terms = get_the_terms( $post_id, self::$manufacturer_taxonomy );
+				if ( !is_wp_error( $terms ) && !empty( $terms ) && is_array( $terms ) ) {
+					$manufacturers = array();
+					foreach ( $terms as $term ) {
+						$manufacturers[] = $term->name;
+					}
+					$manufacturers = implode( ' ', $manufacturers );
+				}
+				if ( $manufacturers !== null && is_string( $manufacturers ) ) {
+					$content .= ' ' . $manufacturers;
+				}
 			}
 		}
 		return $content;
